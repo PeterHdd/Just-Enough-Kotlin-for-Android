@@ -6,6 +6,16 @@ Kotlin is a cross-platform, statically typed, general-purpose programming langua
 
 Let's get started!
 
+### Table of Content
+
+- [Just Enough Kotlin For Android](#just-enough-kotlin-for-android)
+- [Table of Content](#table-of-content)
+  * [Variable Declaration](#variable-declaration)
+  * [when, if, loops](#when--if--loops)
+  * [Classes](#classes)
+    + [Creating a class:](#creating-a-class-)
+
+
 #### Variable Declaration
 
 ```kotlin
