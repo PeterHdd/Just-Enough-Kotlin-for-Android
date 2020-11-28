@@ -14,6 +14,7 @@ Let's get started!
   * [when, if, loops](#when--if--loops)
   * [Classes](#classes)
     + [Creating a class:](#creating-a-class-)
+  * [Initializing Properties](#initializing-properties)
 
 
 #### Variable Declaration
@@ -183,4 +184,97 @@ class Example(val name: String , val location: String){
 }
 ```
 The `init` block will run immediately after the primary constructor, if you decompile it to Java then you will see that the `init` block code will be inside the constructor.
- 
+
+##### Secondary Constructor
+
+You can also have more than one constructor, but the second constructor must refer to the primary constructor:
+
+```kotlin
+class Example(val name: String){
+    init {
+        print("initialize")
+    }
+    constructor(name: String, location: String) : this(name){
+        print("second constructor")
+    }
+}
+```
+If you decompile the above code you will see that in Java you would also have 2 constructors thus having overloaded constructor. Also the `init` block
+will still be called immediately after the primary constructor.
+
+#### Initializing Properties
+
+Sometimes in your code, you don't want to immediately initialize a variable and since Kotlin is null safe, then you cannot do this `var list : List<String>` as a declaration.
+
+The above code will throw an error: `Property must be initialized or be abstract`. Therefore, to solve this you can use the keyword `lateinit` which can only work with variables that can be changed (`var`). The `lateinit`, in simple terms
+basically means initialize later:
+
+```kotlin
+class Example(val name: String){
+       lateinit var list : List<String>
+        constructor(name : String, location : String) : this(name){
+            if(::list.isInitialized){
+                print("initialized")
+            }
+        }
+}
+```
+As you can see `list` here is using `lateinit`, and we use the method `isInitialized` to check if the variable has been initialized or not. If it's not initialized then we
+will get an error `UninitializedPropertyAccessException`. The `::` in Kotlin is used for reflection, using reflection you can get information about a class, function or property.
+
+----
+
+Another way to initialize properties is by using the `by lazy {}`. The `by lazy{}` uses delegation properties, which means that you pass the responsibility to another class or method. For example:
+
+```kotlin
+class Example(val name: String){
+        private val list : List<String> by lazy { mutableListOf("example1") }
+        constructor(name : String, location : String) : this(name){
+            print(list[0])
+        }
+}
+```
+To use property delegation, you need to declare the property and then use the keyword `by <expression>`.
+
+In this case the `lazy()` function will return an instance of [`Lazy`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-lazy/) which is a delegate, therefore now the `Lazy` instance is responsible for the property `list`. So, every time you access the getter function of this property, it will be delegated to the [`getValue()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/get-value.html) method inside `Lazy`.
+
+When you use `by lazy`, the variable will not be initialized until you first used, and then it will always return the same value, for example:
+
+```kotlin
+class Example(val name: String){
+        private val list : List<String> by lazy {
+            println("lazy initial")
+            mutableListOf("example1")
+        }
+        constructor(name : String, location : String) : this(name){
+            println("first call ${list[0]}")
+            println("second call ${list[0]}")
+        }
+}
+
+fun main(){
+    var example = Example("peter","LB")
+}
+```
+The above code will output:
+
+```kotlin
+lazy initial
+first call example1
+second call example1
+```
+So, as you can see when we used the variable it initialized it and then later on, the same value kept returning (initialized only once).
+
+You can see the difference between `lateinit` and `by lazy` [here](https://stackoverflow.com/questions/36623177/kotlin-property-initialization-using-by-lazy-vs-lateinit).
+
+In Android, property delegation is used alot, for example the [`viewModels()`](https://developer.android.com/reference/kotlin/androidx/fragment/app/package-summary#viewmodels), which returns a value of type `Lazy`, therefore the `viewModels()` is the same as `by lazy`:
+
+```kotlin
+// creates lazy delegate for obtaining zero-argument MyViewModel
+private val viewModel : MyViewModel by viewModels()
+// it's functionally equal to:
+private val viewModel by lazy {
+    ViewModelProvider(this).get(MyViewModel::class.java)
+}
+```
+Another example is the `observeAsState()` function which returns an instance of `State<T>`, and since [`State`](https://developer.android.com/reference/kotlin/androidx/compose/runtime/State.html) contains the method `getValue()`, then it can be used for property delegation.
