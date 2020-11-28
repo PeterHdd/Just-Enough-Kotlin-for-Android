@@ -11,9 +11,10 @@ Let's get started!
 - [Just Enough Kotlin For Android](#just-enough-kotlin-for-android)
 - [Table of Content](#table-of-content)
   * [Variable Declaration](#variable-declaration)
-  * [when, if, loops](#when--if--loops)
+  * [when if loops](#when-if-loops)
   * [Classes](#classes)
     + [Creating a class:](#creating-a-class-)
+  * [Secondary Constructor](#-secondary-constructor)
   * [Initializing Properties](#initializing-properties)
 
 
@@ -52,7 +53,7 @@ print(result)
 ```
 The above will check if `name?.endsWith("r")` is not null and return the result, else if it is null it will then return `peter`.
 
-#### when, if, loops
+#### when if loops
 
 ```kotlin
 when(age) {
