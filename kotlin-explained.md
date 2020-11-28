@@ -14,8 +14,10 @@ Let's get started!
   * [when if loops](#when-if-loops)
   * [Classes](#classes)
     + [Creating a class:](#creating-a-class-)
-  * [Secondary Constructor](#-secondary-constructor)
+  * [Secondary Constructor](#secondary-constructor)
   * [Initializing Properties](#initializing-properties)
+  * [Getter and Setters](#getter-and-setters)
+  * [Type of Classes](#type-of-classes)
 
 
 #### Variable Declaration
@@ -279,3 +281,95 @@ private val viewModel by lazy {
 }
 ```
 Another example is the `observeAsState()` function which returns an instance of `State<T>`, and since [`State`](https://developer.android.com/reference/kotlin/androidx/compose/runtime/State.html) contains the method `getValue()`, then it can be used for property delegation.
+
+#### Getter and Setters
+
+Kotlin auto generates the getters and setters for us, so if we have:
+
+```kotlin
+class Example{
+    var name : String = "peter"
+}
+```
+Then in Java it will be:
+
+```java
+public final class Example {
+    @NotNull
+    private String name = "peter";
+
+    @NotNull
+    public final String getName() {
+        return this.name;
+    }
+
+    public final void setName(@NotNull String var1) {
+        this.name = var1;
+    }
+}
+```
+As, you can see the field is private and we access it using the getter and setter that we always used in Java.
+
+Now, let's say you want custom getter and setter, then you can do the following:
+
+```kotlin
+class Example{
+    val name : String
+    get() {
+        print("name")
+        return "test"
+    }
+}
+```
+In Java, the above code would be:
+
+```Java
+public final class Example {
+    @NotNull
+    public final String getName() {
+        String var1 = "name";
+        return "test";
+    }
+}
+```
+As, you can see in this example, the `name` property in Kotlin is not a field in Java, while in the first example of this section the `name` property without a custom getter, was a field in Java.
+In Kotlin, there is a concept called backing field, if a property has a backing field, then it will store its value in memory. For example:
+
+```kotlin
+class Example{
+    val location : String
+    get() = "location"
+    
+    var name : String = ""
+        get() {
+        print("name")
+        return "test"
+    }
+    set(value) { field = value }
+}
+```
+In the code above `name` property has a backing field (`field` keyword), therefore in Java we will get the following:
+
+```Java
+public final class Example {
+    @NotNull
+    private String name = "";
+
+    @NotNull
+    public final String getLocation() {
+        return "location";
+    }
+
+    @NotNull
+    public final String getName() {
+        String var1 = "name";
+        System.out.print(var1);
+        return "test";
+    }
+
+    public final void setName(@NotNull String value) {
+        this.name = value;
+    }
+}
+```
+#### Type of Classes
