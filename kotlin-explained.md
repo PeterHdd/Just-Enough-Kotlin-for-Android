@@ -33,7 +33,7 @@ val name : String = "peter"
 
 You can also null safety in Kotlin:
 
-```
+```kotlin
 fun main(){
     var name : String? = null
     val age : Number? = null
@@ -373,3 +373,61 @@ public final class Example {
 }
 ```
 #### Type of Classes
+
+There are different type of classes in Kotlin:
+
+1- Data Classes: are classes that are mainly used to hold data, example:
+
+```kotlin
+data class Example(val name : String)
+```
+The java equivalent will contain the getter/setter for the name field, `hashCode()`,`equal()`, `toString()` methods.
+
+2- Sealed Classes: are classes used when you want to fix type hierarchies and when you want a value to only have the type declared, for example:
+
+```kotlin
+sealed class People
+class Student : People()
+class Teacher : People()
+
+fun feed(ppl: People): String {
+    return when(ppl) {
+        is Student -> "I'am a Student"
+        is Teacher -> "I'am a Teacher"
+    }
+}
+
+
+fun main(){
+    print(feed(Student()))
+}
+```
+
+3- Open classes: are classes that you can extend, since by default all classes are final, for example:
+
+```kotlin
+open class People{
+    open fun getName(){
+        println("I'm the parent class ${People::class.simpleName}")
+    }
+}
+class Student : People(){
+    override fun getName() {
+         super.getName()
+        println("I'm the parent class ${Student::class.simpleName}")
+    }
+}
+fun main(){
+    var student = Student()
+    println(student.getName())
+}
+```
+This will give the following output:
+
+```kotlin
+I'm the parent class People
+I'm the parent class Student
+```
+To extend the class you have to use the following `<child-class> : <parent-class>()`.
+
+If you have an interface and you want to implement it, then you have to do `<class> : <interface>`.
