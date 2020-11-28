@@ -526,7 +526,7 @@ fun main(){
 ```
 The following syntax `() -> Unit` means that this function will take no arguments and return `Unit` (void). Since, the function argument, is the last or only argument then you can remove the paranthesis when calling `createUI()`.
 
-Another use of functions is extension functions which are used when you are using a third party library and want to add new functionality to the class. To create an extension function you need to use the following syntax:
+Another use of functions is **extension functions** which are used when you are using a third party library and want to add new functionality to the class. To create an extension function you need to use the following syntax:
 
 ```kotlin
 fun <receiver-type>.<fun-name>(arguments){
