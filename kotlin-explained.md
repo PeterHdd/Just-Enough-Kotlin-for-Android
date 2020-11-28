@@ -19,6 +19,7 @@ Let's get started!
   * [Getter and Setters](#getter-and-setters)
   * [Type of Classes](#type-of-classes)
   * [Objects and Companion Object](#objects-and-companion-object)
+  * [Functions](#functions)
 
 
 #### Variable Declaration
@@ -495,4 +496,81 @@ fun main(){
 }
 
 ```
-Here, we dont have to create an instance of `Example` to access `init()`, we can also remove the default name and just do `print(Example.init())`.
+Here, we don't have to create an instance of `Example` to access `init()`, we can also remove the default name and just do `print(Example.init())`.
+
+#### Functions
+
+We have already seen examples of functions. I only want to add couple of stuff, in Kotlin you give a parameter a default value, and you can also use named arguments. For example:
+
+```kotlin
+fun createUI(label : String = "button", textArea: TextArea){}
+
+fun main(){
+    createUI(textArea = TextArea("text") )
+}
+```
+The value `"button"` is a default value, and when calling `createUI()` I used named arguments.
+
+Also in Kotlin, a function can be passed as an argument to another function. Therefore to be able to do that you can use lambda expression. Example:
+
+```kotlin
+fun createUI(btn: () -> Unit) {
+    btn()
+}
+
+fun main(){
+    createUI {
+        print("lambda")
+    }
+}
+```
+The following syntax `() -> Unit` means that this function will take no arguments and return `Unit` (void). Since, the function argument, is the last or only argument then you can remove the paranthesis when calling `createUI()`.
+
+Another use of functions is extension functions which are used when you are using a third party library and want to add new functionality to the class. To create an extension function you need to use the following syntax:
+
+```kotlin
+fun <receiver-type>.<fun-name>(arguments){
+  this //this here will refer to the reciever Type
+}
+```
+Android uses extension function alot, for example to write a value to the disk you need to do the following:
+
+```kotlin
+sharedPreferences
+        .edit()  // create an Editor
+        .putBoolean("key", value)
+        .apply() // write to disk asynchronously
+```
+
+To simplify this the Android team created this following extension:
+
+```kotlin
+inline fun SharedPreferences.edit(
+    commit: Boolean = false, 
+    action: Editor.() -> Unit
+): Unit
+```
+As you can see the `edit()` function was added to the `SharedPerferences` class. The function takes a `Boolean` and a lambda expression with a receiver of type `Editor`, this way when calling the function you can call methods that belong to the class `Editor`:
+
+```kotlin
+prefs.edit {
+    putString("key", value)
+}
+```
+Having a receiver type in the lambda will let you use the receiver's type method as you saw in the above example. Another example:
+
+```kotlin
+var capValue: String.() -> String = {
+   toUpperCase()
+}
+
+fun main(){
+   print(capValue("hi"))
+}
+```
+Output:
+
+```
+HI
+```
+Now here since the receiver type is `String` then you can use `toUpperCase()` in the block body, and `this` will refer to `String`.
