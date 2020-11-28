@@ -13,11 +13,12 @@ Let's get started!
   * [Variable Declaration](#variable-declaration)
   * [when if loops](#when-if-loops)
   * [Classes](#classes)
-    + [Creating a class:](#creating-a-class-)
+    + [Creating a class:](#creating-a-class)
   * [Secondary Constructor](#secondary-constructor)
   * [Initializing Properties](#initializing-properties)
   * [Getter and Setters](#getter-and-setters)
   * [Type of Classes](#type-of-classes)
+  * [Objects and Companion Object](#objects-and-companion-object)
 
 
 #### Variable Declaration
@@ -430,4 +431,68 @@ I'm the parent class Student
 ```
 To extend the class you have to use the following `<child-class> : <parent-class>()`.
 
-If you have an interface and you want to implement it, then you have to do `<class> : <interface>`.
+If you have an interface, and you want to implement it, then you have to do `<class> : <interface>`.
+
+#### Objects and Companion Object
+
+There are two types of objects, `object` expression and `object` declaration. Object expression is equivalent to anonymous class in java. For example:
+
+```kotlin
+fun main(){
+    val btn = Button()
+    btn.addActionListener(object : ActionListener {
+        override fun actionPerformed(e: ActionEvent?) {
+            TODO("Not yet implemented")
+        }
+    })
+}
+```
+Since `ActionListener` has only one abstract function, then it's also called a functional interface, so you can use lambda instead:
+
+```kotlin
+fun main(){
+    val btn = Button()
+    btn.addActionListener { TODO("Not yet implemented") }
+}
+```
+Object Declaration implement the Singleton pattern. For example:
+
+```kotlin
+object Constants{
+    const val label = "Enter Here"
+}
+```
+`const val` will give you a static final field in Java:
+
+```Java
+public final class Constants {
+    @NotNull
+    public static final String label = "Enter Here";
+    public static final Constants INSTANCE;
+
+    private Constants() {
+    }
+
+    static {
+        Constants var0 = new Constants();
+        INSTANCE = var0;
+    }
+}
+```
+Companion Objects in Kotlin are close to static in Java, for example:
+
+```kotlin
+class Example {
+    companion object {
+       fun init(){
+           print("init")
+       }
+    }
+}
+
+fun main(){
+    print(Example.Companion.init())
+}
+
+```
+Here, we dont have to create an instance of `Example` to access `init()`, we can also remove the default name and just do `print(Example.init())`.
